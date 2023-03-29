@@ -1,12 +1,18 @@
 const images = new Array(8)
 	.fill()
 	.map(
-		(element, index) => {
+		(_, index) => {
 			const image = new Image();
 			image.src = `assets/dvdlogo-0${index + 1}.png`
 			return image;
 		}
 	);
+
+const maxImageWidth = 192;
+const maxImageHeight = Math.floor(maxImageWidth * 9 / 16);
+
+const restrictImageWidth = (image, maxWidth) => Math.min(image.naturalWidth, maxWidth);
+const restrictImageHeight = (image, maxHeight) => Math.min(image.naturalHeight, maxHeight);
 
 const main = function() {
 	const canvas = document.querySelector('canvas');
@@ -15,19 +21,18 @@ const main = function() {
 	const rectangle = {
 		'x': canvas.width * .5,
 		'y': canvas.height * .5,
-		'width': 100,
-		'height': 50
+		'width': restrictImageWidth(images[0], maxImageWidth),
+		'height': restrictImageHeight(images[0], maxImageHeight)
 	};
 
-	const magnitude = Number(new URL(document.URL).searchParams.has('speed') ? new URL(document.URL).searchParams.get('speed') : 4);
+	const magnitude = Number(new URL(document.URL).searchParams.has('speed') ? new URL(document.URL).searchParams.get('speed') : 17);
+	const angle = Math.atan2(1, 2);
 	const speed = {
-		'x': 2 * magnitude,
-		'y': 1 * magnitude
+		'x': Math.cos(angle) * magnitude,
+		'y': Math.sin(angle) * magnitude,
 	};
 
 	let dvdIndex = 0;
-
-	console.log(images[dvdIndex]);
 
 	const loop = () => {
 		// Resize canvas according to the window
@@ -53,12 +58,16 @@ const main = function() {
 			speed.x *= -1;
 			dvdIndex = (dvdIndex + 1) % images.length;
 			rectangle.x = Math.max(Math.min(rectangle.x, context.canvas.width - rectangle.width), 0);
+			rectangle.width = restrictImageWidth(images[dvdIndex], maxImageWidth);
+			rectangle.height = restrictImageHeight(images[dvdIndex], maxImageHeight);
 		}
 
 		if (rectangle.y < 0 || rectangle.y + rectangle.height > canvas.height) {
 			speed.y *= -1;
 			dvdIndex = (dvdIndex + 1) % images.length;
 			rectangle.y = Math.max(Math.min(rectangle.y, context.canvas.height - rectangle.height), 0);
+			rectangle.width = restrictImageWidth(images[dvdIndex], maxImageWidth);
+			rectangle.height = restrictImageHeight(images[dvdIndex], maxImageHeight);
 		}
 
 		// Loop
