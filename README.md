@@ -21,15 +21,18 @@ and can be accessed through this [link](https://shelltux.github.io/dvd-logo-boun
 
 ## Usage
 
-You can change the speed by which the logo travels across
-the screen adding url arguments at the endpoint.
-The argument is called `speed`
+The behaviour of the dvd logo is quite dynamic.
+The user can input the `speed`
+and the `size` of the dvd logo in pixels.
 
-Example:
+For example:
 
 ```url
-https://shelltux.github.io/dvd-logo-bounce?speed=5
+https://shelltux.github.io/dvd-logo-bounce?speed=5&size=256
 ```
+
+The `size` argument will only change the width of the image
+to maintain the aspect ratio of the logo image.
 
 ## Contributing
 
